@@ -9,6 +9,7 @@ function p($obj)
 
 function copyFile($source, $dest)
 {
+	$is_dot = array ('.', '..');
 	if (is_dir($source))
 	{
 		if (version_compare(phpversion(), '5.3', '<'))
