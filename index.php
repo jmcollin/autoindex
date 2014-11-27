@@ -126,11 +126,14 @@ function addIndex($path, $cli = false)
 	}
 }
 
-if (isset($argv) &&  (isset($argc) && $argc >= 2))
+if (php_sapi_name() === 'cli')
 {
-	array_shift($argv);
-	foreach($argv as $dir)
-		addIndex($dir, true);
+	if (isset($argv) &&  (isset($argc) && $argc >= 2))
+	{
+		array_shift($argv);
+		foreach($argv as $dir)
+			addIndex($dir, true);
+	}
 }
 elseif (isset($argv) &&  (isset($argc) && $argc < 2))
 {
@@ -184,16 +187,13 @@ else
 								<form name="sentMessage" id="contactForm" action="index.php" method="post">
 									<div class="row control-group">
 										<div class="form-group col-xs-12 floating-label-form-group controls">
-											<label>Directory name</label>
-											<input type="text" class="form-control" placeholder="Directory name" id="path">
+											<label>Path to your directory</label>
+											<input type="text" class="form-control" placeholder="/var/www/modules/mymodule/" id="path">
 											<p class="help-block text-danger"></p>
 										</div>
 									</div>
 									<br>
 									<div id="success">
-									<!---
-										<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Sorry Aaa, it seems that my mail server is not responding. Please try again later!</strong></div>
-									-->
 									</div>
 									<div class="row">
 										<div class="form-group col-xs-12">
@@ -209,6 +209,7 @@ else
 				<script>
 					$(".btn").on("click", function (e) {
 						e.preventDefault();
+						$("#success").html("<pre>Adding index file is in progressing...</pre>");
 						$.ajax({
 							type: "POST",
 							url: "index.php",
