@@ -12,7 +12,7 @@ function copyFile($source, $dest)
 	$is_dot = array ('.', '..');
 	if (is_dir($source))
 	{
-		if (version_compare(phpversion(), '5.3', '<'))
+		if (version_compare((float)phpversion(), (float)'5.3', '<'))
 		{
 			$iterator = new RecursiveIteratorIterator(
 				new RecursiveDirectoryIterator($source),
@@ -29,12 +29,12 @@ function copyFile($source, $dest)
 
 		foreach ($iterator as $file)
 		{
-			if (version_compare(phpversion(), '5.2.17', '<='))
+			if (version_compare((float)phpversion(), (float)'5.2.17', '<='))
 			{
 				if (in_array($file->getBasename(), $is_dot))
 					continue;
 			}
-			elseif (version_compare(phpversion(), '5.3', '<'))
+			elseif (version_compare((float)phpversion(), (float)'5.3', '<'))
 			{
 				if ($file->isDot())
 					continue;
@@ -45,6 +45,7 @@ function copyFile($source, $dest)
 			else
 				copy($file, $dest.DIRECTORY_SEPARATOR.$iterator->getSubPathName());
 		}
+		unset($iterator, $file);
 	}
 	else
 		copy($source, $dest);
@@ -55,9 +56,10 @@ function copyFile($source, $dest)
 function addIndex($path, $cli = false)
 {
 	$is_dot = array ('.', '..');
+	$file_extension = substr(strrchr($path, '.'), 1);
 	if (is_dir($path))
 	{
-		if (version_compare(phpversion(), '5.3', '<'))
+		if (version_compare((float)phpversion(), (float)'5.3', '<'))
 		{
 			$iterator = new RecursiveIteratorIterator(
 				new RecursiveDirectoryIterator($path),
@@ -74,12 +76,12 @@ function addIndex($path, $cli = false)
 
 		foreach ($iterator as $pathname => $file)
 		{
-			if (version_compare(phpversion(), '5.2.17', '<='))
+			if (version_compare((float)phpversion(), (float)'5.2.17', '<='))
 			{
 				if (in_array($file->getBasename(), $is_dot))
 					continue;
 			}
-			elseif (version_compare(phpversion(), '5.3', '<'))
+			elseif (version_compare((float)phpversion(), '(float)5.3', '<'))
 			{
 				if ($file->isDot())
 					continue;
@@ -109,16 +111,67 @@ function addIndex($path, $cli = false)
 				}
 			}
 		}
-		unset($iterator, $file);
+		unset($iterator, $pathname, $file);
+
 		$msg = 'index.php added in '.$path;
 		if ($cli === true)
 			echo $msg."\n";
 		else
 			p($msg);
 	}
+	elseif ($file_extension === 'zip')
+	{
+		if (class_exists('ZipArchive'))
+		{
+			$add_index = array();
+			$zip = new ZipArchive();
+			$res = $zip->open($path);
+			if ($res === true)
+			{
+				for ($i = 0; $i < $zip->numFiles; $i++)
+				{
+					$stat = $zip->statIndex($i);
+					if (!empty($stat))
+					{
+						$file_info = pathinfo($stat['name']);
+						if (!empty($file_info))
+						{
+							$dirname = trim($file_info['dirname']);
+							$filename = trim($file_info['filename']);
+							$basename = trim($file_info['basename']);
+							if (!in_array($dirname, $is_dot))
+							{
+								if (empty($zip->getFromName($dirname.'/index.php')))
+								{
+									$add_index[] = $dirname.'/';
+								}
+							}
+						}
+					}
+				}
+
+				$add_index = array_unique($add_index);
+				foreach ($add_index as $dir_path)
+				{
+					if ($zip->addFile('sources/index.php', $dir_path.'index.php') === true)
+						continue;
+				}
+				unset($add_index,  $dir_path);
+
+				$zip->close();
+				unset($zip);
+
+				$msg = 'index.php added in '.$path;
+				if ($cli === true)
+					echo $msg."\n";
+				else
+					p($msg);
+			}
+		}
+	}
 	else
 	{
-		$msg = $path.' isn\'t a directory';
+		$msg = $path.' isn\'t a directory or zip file';
 		if ($cli === true)
 			echo $msg."\n";
 		else
