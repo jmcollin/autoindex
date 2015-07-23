@@ -141,7 +141,8 @@ function addIndex($path, $cli = false)
 							$basename = trim($file_info['basename']);
 							if (!in_array($dirname, $is_dot))
 							{
-								if (empty($zip->getFromName($dirname.'/index.php')))
+								$getFromName = $zip->getFromName($dirname.'/index.php');
+								if (empty($getFromName))
 								{
 									$add_index[] = $dirname.'/';
 								}
@@ -168,6 +169,13 @@ function addIndex($path, $cli = false)
 					p($msg);
 			}
 		}
+		else
+		{
+			if ($cli === true)
+				echo "You need to install ZipArchive\npecl install zip\n";
+			else
+				p('You need to install ZipArchive<br />pecl install zip');
+		}
 	}
 	else
 	{
@@ -191,7 +199,7 @@ if (php_sapi_name() === 'cli')
 elseif (isset($argv) &&  (isset($argc) && $argc < 2))
 {
 	echo 'Usage: php [directory...]';
-	echo "\n\t".'php index.php /var/www/prestashop1609/modules/mymodule/'."\n";
+	echo "\n\t".'php index.php /var/www/prestashop1611/modules/mymodule/'."\n";
 }
 else
 {
@@ -229,7 +237,7 @@ else
 				<nav class="navbar navbar-default navbar-fixed-top">
 					<div class="container">
 						<div class="navbar-header page-scroll">
-							<a class="navbar-brand">Auto Index</a>
+							<a class="navbar-brand">Auto Index <sup><small>v 1.0.1</small></sup></a>
 						</div>
 					</div>
 				</nav>
