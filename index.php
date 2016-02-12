@@ -1,5 +1,8 @@
 <?php
 
+define('__PHP52__', version_compare((float)phpversion(), (float)'5.2.17', '<='));
+define('__PHP53__', version_compare((float)phpversion(), (float)'5.3', '<='));
+
 function p($obj)
 {
 	echo '<pre>';
@@ -12,7 +15,7 @@ function copyFile($source, $dest)
 	$is_dot = array ('.', '..');
 	if (is_dir($source))
 	{
-		if (version_compare((float)phpversion(), (float)'5.3', '<'))
+		if (__PHP53__)
 		{
 			$iterator = new RecursiveIteratorIterator(
 				new RecursiveDirectoryIterator($source),
@@ -29,12 +32,12 @@ function copyFile($source, $dest)
 
 		foreach ($iterator as $file)
 		{
-			if (version_compare((float)phpversion(), (float)'5.2.17', '<='))
+			if (__PHP52__)
 			{
 				if (in_array($file->getBasename(), $is_dot))
 					continue;
 			}
-			elseif (version_compare((float)phpversion(), (float)'5.3', '<'))
+			elseif (__PHP53__)
 			{
 				if ($file->isDot())
 					continue;
@@ -59,7 +62,7 @@ function addIndex($path, $cli = false)
 	$file_extension = substr(strrchr($path, '.'), 1);
 	if (is_dir($path))
 	{
-		if (version_compare((float)phpversion(), (float)'5.3', '<'))
+		if (__PHP53__)
 		{
 			$iterator = new RecursiveIteratorIterator(
 				new RecursiveDirectoryIterator($path),
@@ -76,12 +79,12 @@ function addIndex($path, $cli = false)
 
 		foreach ($iterator as $pathname => $file)
 		{
-			if (version_compare((float)phpversion(), (float)'5.2.17', '<='))
+			if (__PHP52__)
 			{
 				if (in_array($file->getBasename(), $is_dot))
 					continue;
 			}
-			elseif (version_compare((float)phpversion(), '(float)5.3', '<'))
+			elseif (__PHP53__)
 			{
 				if ($file->isDot())
 					continue;
