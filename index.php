@@ -1,5 +1,6 @@
 <?php
 
+define('__REAL_AUTOINDEX_PATH', __DIR__.DIRECTORY_SEPARATOR);
 define('__PHP52__', version_compare((float)phpversion(), (float)'5.2.17', '<='));
 define('__PHP53__', version_compare((float)phpversion(), (float)'5.3', '<='));
 
@@ -97,7 +98,7 @@ function addIndex($path, $cli = false)
 			{
 				if (!file_exists($dirname.'index.php'))
 				{
-					if (copyFile('sources/index.php', $dirname.'index.php') === true)
+					if (copyFile(__REAL_AUTOINDEX_PATH.'sources/index.php', $dirname.'index.php') === true)
 						continue;
 				}
 			}
@@ -108,7 +109,7 @@ function addIndex($path, $cli = false)
 					$dirname = str_replace('\\', '/', $file->getPathname().'/');
 					if (!file_exists($dirname.'index.php'))
 					{
-						if (copyFile('sources/index.php', $dirname.'index.php') === true)
+						if (copyFile(__REAL_AUTOINDEX_PATH.'sources/index.php', $dirname.'index.php') === true)
 							continue;
 					}
 				}
@@ -157,7 +158,7 @@ function addIndex($path, $cli = false)
 				$add_index = array_unique($add_index);
 				foreach ($add_index as $dir_path)
 				{
-					if ($zip->addFile('sources/index.php', $dir_path.'index.php') === true)
+					if ($zip->addFile(__REAL_AUTOINDEX_PATH.'sources/index.php', $dir_path.'index.php') === true)
 						continue;
 				}
 				unset($add_index,  $dir_path);
