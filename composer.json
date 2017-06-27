@@ -1,9 +1,9 @@
 {
-  "name": "pagantis/autoindex",
+  "name": "pagamastarde/autoindex",
   "type": "module",
   "description": "Generate index.php file in all directories that does not contain index.php file. This is helpful for prestashop",
   "keywords": ["autoindex", "module", "index", "prestashop"],
-  "homepage": "https://github.com/pagantis/autoindex",
+  "homepage": "https://github.com/pagamastarde/autoindex",
   "license": "MIT",
   "authors": [{
     "name": "Digital Origin",
