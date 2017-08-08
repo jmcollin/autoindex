@@ -1,0 +1,25 @@
+{
+  "name": "pagamastarde/autoindex",
+  "type": "module",
+  "description": "Generate index.php file in all directories that does not contain index.php file. This is helpful for prestashop",
+  "keywords": ["autoindex", "module", "index", "prestashop"],
+  "homepage": "https://github.com/pagamastarde/autoindex",
+  "license": "MIT",
+  "authors": [{
+    "name": "Digital Origin",
+    "email": "cromero@digitalorigin.com"
+  }],
+  "require": {
+    "php": ">=5.3"
+  },
+  "require-dev": {
+  },
+  "config": {
+    "bin-dir": "bin/"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    }
+  }
+}
