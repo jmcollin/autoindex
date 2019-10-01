@@ -3,7 +3,6 @@
     "description": "Automatically add an index.php in all directories recursively",
     "type": "library",
     "license": "MIT",
-    "version": "1.0.0",
     "keywords": [
         "directory-traversal-vulnerability",
         "security",

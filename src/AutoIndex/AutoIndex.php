@@ -28,9 +28,9 @@ class AutoIndex
 
     /**
      * Constructor.
-     * 
-     * @param string $directoryPath 
-     * @param string $sourcePath    
+     *
+     * @param string $directoryPath
+     * @param string $sourcePath
      */
     public function __construct($directoryPath, $sourcePath)
     {
@@ -43,7 +43,7 @@ class AutoIndex
     /**
      * Set the path name to be used.
      *
-     * @param string $path 
+     * @param string $path
      *
      * @throws \InvalidArgumentException When directory isn't set
      */
