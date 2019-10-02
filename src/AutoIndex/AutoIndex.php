@@ -48,9 +48,11 @@ class AutoIndex
      *
      * @param string $path
      *
+     * @return string
+     *
      * @throws \InvalidArgumentException When directory isn't set
      */
-    private function setPath($path)
+    private function setPath($path): string
     {
         if (file_exists($path) === false) {
             throw new \InvalidArgumentException('setPath only accepts directory. Input was: ' . $path);
@@ -65,7 +67,7 @@ class AutoIndex
      *
      * @return array
      */
-    private function setSkip($path)
+    private function setSkip($path): array
     {
         $ignore = [];
         foreach ($this->skipDirectory as $value) {
@@ -106,7 +108,7 @@ class AutoIndex
      *
      * @return bool
      */
-    private function checkIndexInDirectory($directoryPath)
+    private function checkIndexInDirectory($directoryPath): bool
     {
         return file_exists($directoryPath . 'index.php');
     }
@@ -118,7 +120,7 @@ class AutoIndex
      *
      * @return bool
      */
-    private function copyFile($directoryPath)
+    private function copyFile($directoryPath): bool
     {
         return copy($this->sourcePath . 'index.php', $directoryPath . 'index.php');
     }
