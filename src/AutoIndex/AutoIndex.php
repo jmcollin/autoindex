@@ -32,12 +32,15 @@ class AutoIndex
      * @param string $directoryPath
      * @param string $sourcePath
      */
-    public function __construct($directoryPath, $sourcePath)
+    public function __construct($directoryPath, $sourcePath = null)
     {
+        // Force source path
+        if (is_null($sourcePath) === true) {
+            $sourcePath = realpath(__DIR__ . '/../..') . DIRECTORY_SEPARATOR . 'sources';
+        }
+
         $this->sourcePath = $this->setPath($sourcePath);
         $this->directoryPath = $this->setPath($directoryPath);
-
-        $this->setSkip();
     }
 
     /**
@@ -57,13 +60,20 @@ class AutoIndex
 
     /**
      * Set the skip list to be used.
+     *
+     * @param string $path
+     *
+     * @return array
      */
-    private function setSkip()
+    private function setSkip($path)
     {
-        foreach ($this->skipDirectory as &$value) {
-            $value = $this->directoryPath . $value;
+        $ignore = [];
+        foreach ($this->skipDirectory as $value) {
+            $ignore[] = $path . $value;
         }
         unset($value);
+
+        return $ignore;
     }
 
     /**
@@ -73,8 +83,10 @@ class AutoIndex
      */
     private function copyFileRecursively($path)
     {
-        $filesList = (array) glob($path . "*", GLOB_ONLYDIR);
-        $filterList = array_diff($filesList, $this->skipDirectory);
+        $skipDirectory = $this->setSkip($path);
+
+        $dirsList = (array) glob($path . "*", GLOB_ONLYDIR);
+        $filterList = array_diff($dirsList, $skipDirectory);
 
         if ($this->checkIndexInDirectory($path) === false) {
             $this->copyFile($path . DIRECTORY_SEPARATOR);
