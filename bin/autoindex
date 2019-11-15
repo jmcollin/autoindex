@@ -1,0 +1,58 @@
+#!/usr/bin/env php
+<?php
+
+# 1. autoload
+$possibleAutoloadPaths = [
+    // after split package
+    __DIR__ . '/../vendor',
+    // dependency
+    __DIR__ . '/../../..',
+    // monorepo
+    __DIR__ . '/../../../vendor',
+];
+
+foreach ($possibleAutoloadPaths as $possibleAutoloadPath) {
+    if (is_file($possibleAutoloadPath . '/autoload.php')) {
+        require_once $possibleAutoloadPath . '/autoload.php';
+
+        break;
+    }
+}
+unset($possibleAutoloadPath);
+
+if (php_sapi_name() !== 'cli') {
+    exit(1);
+}
+
+use AutoIndex\AutoIndex;
+
+if (isset($argc) && $argc > 1)
+{
+    array_shift($argv);
+
+    $source = null;
+    if (isset($argv[1])) {
+        $source = $argv[1];
+    }
+
+    $autoindex = new AutoIndex($argv[0], $source);
+    $autoindex->addIndex();
+
+    exit (0);
+}
+
+echo "AutoIndex" . PHP_EOL;
+echo " ". PHP_EOL;
+echo "Usage: vendor/bin/autoindex DEST_PATH". PHP_EOL;
+echo "  or:  vendor/bin/autoindex DEST_PATH SOURCE_PATH...". PHP_EOL;
+echo " ". PHP_EOL;
+echo "Options". PHP_EOL;
+echo " DEST_PATH                    Directory where index will be copied". PHP_EOL;
+echo " SOURCE_PATH                  Directory serving as source for your index". PHP_EOL;
+echo " ". PHP_EOL;
+echo "(-h|-?) --help                show this help". PHP_EOL;
+echo " ". PHP_EOL;
+echo " ". PHP_EOL;
+echo "By default, SOURCE_PATH uses index.php provided with this package ". PHP_EOL;
+
+exit(1);
